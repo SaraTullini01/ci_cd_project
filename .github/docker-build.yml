@@ -1,0 +1,68 @@
+# name: Docker Build
+# on:
+#     push:
+#         branches:
+#             - master
+# jobs:
+#     build:
+#         runs-on: ubuntu-latest
+#         steps:
+#           - name: Checkout Code
+#             uses: actions/checkout@v2
+#           - name: Login to Docker Hub
+#             uses: docker/login-action@v1
+#             with:
+#                 username: ${{ secrets.DOCKER_USERNAME }}
+#                 password: ${{ secrets.DOCKER_PASSWORD }}
+#           - name: Build Docker Image
+#             uses: docker/build-push-action@v2
+#             with:
+#                 context: .
+#                 push: true
+#                 tags: ${{ secrets.DOCKER_USERNAME }}/hello_world:${{ github.sha }}
+# name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+            username: ${{ secrets.DOCKER_USERNAME }}
+            password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and Push Docker Image
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/hello_world:${{ github.sha }} 
+
+      - name: Update Deployment and Tag on Success
+        if: success()
+        run: |
+          # Get the Docker image SHA from the output of the previous step
+          DOCKER_IMAGE_SHA=${{ github.sha }} 
+          
+          # Debug: Print the value of DOCKER_IMAGE_SHA
+          echo "DOCKER_IMAGE_SHA: $DOCKER_IMAGE_SHA"
+
+          # Tag the image with "latest"
+          docker tag ${{ secrets.DOCKER_USERNAME }}/hello_world:$DOCKER_IMAGE_SHA ${{ secrets.DOCKER_USERNAME }}/hello_world:latest
+
+          # Push the "latest" tag to Docker Hub
+          docker push ${{ secrets.DOCKER_USERNAME }}/hello_world:latest
+
+      - name: Clean Up Unused Docker Images
+        run: docker system prune -f
