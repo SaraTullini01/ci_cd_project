@@ -71,7 +71,7 @@ jobs:
 
           docker rmi -f saratullini01/hello_world:latest
           
-          docker run --name hello_world -d -p 5000:8001 ${{ secrets.DOCKER_USERNAME }}/hello_world:latest
+          docker run --name hello_world -d -p 8000:5000 ${{ secrets.DOCKER_USERNAME }}/hello_world:latest
 
       - name: Clean Up Unused Docker Images
         run: docker system prune -f
