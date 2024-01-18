@@ -29,7 +29,7 @@ on:
 
 jobs:
   build_and_deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted #ubuntu-latest
 
     steps:
       - name: Checkout Code
@@ -63,6 +63,15 @@ jobs:
 
           # Push the "latest" tag to Docker Hub
           docker push ${{ secrets.DOCKER_USERNAME }}/hello_world:latest
+
+          if [ $( docker ps -a -f name=hello_world | wc -l ) -eq 2 ]; then
+            docker stop hello_world
+            docker container prune -f
+          fi
+
+          docker rmi -f saratullini01/hello_world:latest
+          
+          docker run --name hello_world -d -p 5000:5000 ${{ secrets.DOCKER_USERNAME }}/hello_world:latest
 
       - name: Clean Up Unused Docker Images
         run: docker system prune -f
