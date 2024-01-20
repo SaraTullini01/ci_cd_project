@@ -1,0 +1,21 @@
+name: Notifier
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+    #funziona a singola persona
+    notifyTelegram:
+        runs-on: ubuntu-latest
+        steps:
+        - name: send custom message
+          uses: appleboy/telegram-action@master
+          with:
+            to: ${{ secrets.TELEGRAM_CHAT }} #da mettere id chat
+            token: ${{ secrets.TELEGRAM_TOKEN }}
+            message: |
+              E' stato eseguito un ${{ github.event_name }} event sul repository git https://github.com/SaraTullini01/hello_world_gitaction.git. 
+              Clicca qui per vedere l'applicazione: http://localhost:8000.
