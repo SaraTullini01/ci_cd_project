@@ -1,3 +1,4 @@
 e7d88886574475497045b8375864d574ea5d6e1f - Aggiunti log e telegram - SaraTullini01 - Sat Jan 20 15:27:35 UTC 2024
 fb3936db783d7a6b24c289c80573fe66fec9af66 - correzione porta - SaraTullini01 - Sat Jan 20 15:33:32 UTC 2024
 ef79b87eb60966eaf64ade7bd48cb59b2252cad0 - prova modifica applicazione - SaraTullini01 - Wed Jan 24 15:35:47 UTC 2024
+59c472302a9d2dae87a129086a21fc220a28161c - Creazione pagina html base - SaraTullini01 - Wed Jan 31 16:01:24 UTC 2024
